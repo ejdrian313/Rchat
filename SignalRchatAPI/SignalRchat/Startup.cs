@@ -1,0 +1,101 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using AutoMapper;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using SignalRchat.Hubs;
+
+namespace SignalRchat
+{
+    public class Startup
+    {
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
+        public IConfiguration Configuration { get; }
+
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", builder => builder
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials()
+                    .SetPreflightMaxAge(TimeSpan.FromSeconds(2520))
+                    .Build());
+            });
+
+            services.AddAutoMapper();
+            services.AddMvc();
+            services.AddDataProtection();
+            services.AddSignalR();
+
+            //services.AddSwaggerGen(c =>
+            //{
+            //    c.SwaggerDoc("v1", new Info { Title = "FitPimp API", Version = "v1" });
+            //    c.OperationFilter<SwaggerFileUpload>(); //Register Swagger File Add Filter
+            //    c.DescribeAllEnumsAsStrings();
+            //    c.AddSecurityDefinition("Bearer", new ApiKeyScheme
+            //    {
+            //        Description = "JWT Authorization header using the Bearer scheme. Example: \"Bearer {token}\"",
+            //        Name = "Authorization",
+            //        In = "header",
+            //        Type = "apiKey"
+            //    });
+            //    c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
+            //    {
+            //        { "Bearer", new string[] { } }
+            //    });
+
+            //    // Set the comments path for the Swagger JSON and UI.
+            //    //var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            //    //var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            //    //c.IncludeXmlComments(xmlPath);
+            //});
+
+
+            //services.AddDbContext<ApplicationDbContext>(options =>
+          //  options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+        }
+
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+
+            app.UseCors("CorsPolicy");
+
+         //   app.UseFileServer();
+
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<ChatHub>("/chat");
+            });
+
+            //app.UseSwagger();
+            //app.UseSwaggerUI(s =>
+            //{
+            //    s.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
+            //    s.RoutePrefix = "api/docs";
+            //});
+
+            app.UseMvcWithDefaultRoute();
+        }
+    }
+}
