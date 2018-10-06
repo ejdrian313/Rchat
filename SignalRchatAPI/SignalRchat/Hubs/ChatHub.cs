@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using MongoDB.Driver;
 using SignalRchat.Models;
+using SignalRchat.Services;
+using SignalRchat.Services.DAO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,16 +11,16 @@ namespace SignalRchat.Hubs
 {
     public class ChatHub : Hub
     {
-        public List<Message> messages;
-
-        ChatHub() : base()
+        private IMongoClient _mongo;
+        
+        public ChatHub(IMongoClient mongo) : base()
         {
-            messages = new List<Message>();
+            _mongo = mongo;
         }
 
         public void Send(string name, string message)
         {
-            messages.Add(new Message
+            _mongo.GetDatabase("chatrdb").GetCollection<Message>("Messages").InsertOneAsync(new Message
             {
                 Name = name,
                 Body = message

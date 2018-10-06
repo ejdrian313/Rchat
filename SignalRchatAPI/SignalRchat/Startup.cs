@@ -10,7 +10,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson;
+using MongoDB.Driver;
+using MongoDB.Driver.Core.Events;
 using SignalRchat.Hubs;
+using SignalRchat.Services;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace SignalRchat
 {
@@ -38,37 +43,30 @@ namespace SignalRchat
             });
 
             services.AddAutoMapper();
-            services.AddMvc();
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddDataProtection();
-            services.AddSignalR();
+            services.AddSignalR(o =>
+            {
+                o.EnableDetailedErrors = true;
+            });
+            services.AddSingleton<IMongoClient>(new MongoClient(Configuration.GetSection("MongoConnection:ConnectionString").Value));
 
-            //services.AddSwaggerGen(c =>
-            //{
-            //    c.SwaggerDoc("v1", new Info { Title = "FitPimp API", Version = "v1" });
-            //    c.OperationFilter<SwaggerFileUpload>(); //Register Swagger File Add Filter
-            //    c.DescribeAllEnumsAsStrings();
-            //    c.AddSecurityDefinition("Bearer", new ApiKeyScheme
-            //    {
-            //        Description = "JWT Authorization header using the Bearer scheme. Example: \"Bearer {token}\"",
-            //        Name = "Authorization",
-            //        In = "header",
-            //        Type = "apiKey"
-            //    });
-            //    c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
-            //    {
-            //        { "Bearer", new string[] { } }
-            //    });
-
-            //    // Set the comments path for the Swagger JSON and UI.
-            //    //var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-            //    //var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-            //    //c.IncludeXmlComments(xmlPath);
-            //});
-
-
-            //services.AddDbContext<ApplicationDbContext>(options =>
-          //  options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "chatR API", Version = "v1" });
+                c.DescribeAllEnumsAsStrings();
+                c.AddSecurityDefinition("Bearer", new ApiKeyScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Bearer {token}\"",
+                    Name = "Authorization",
+                    In = "header",
+                    Type = "apiKey"
+                });
+                c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
+                {
+                    { "Bearer", new string[] { } }
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -81,21 +79,22 @@ namespace SignalRchat
 
             app.UseCors("CorsPolicy");
 
-         //   app.UseFileServer();
+            app.UseFileServer();
 
             app.UseSignalR(routes =>
             {
                 routes.MapHub<ChatHub>("/chat");
             });
 
-            //app.UseSwagger();
-            //app.UseSwaggerUI(s =>
-            //{
-            //    s.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
-            //    s.RoutePrefix = "api/docs";
-            //});
+            
+            app.UseSwagger();
+            app.UseSwaggerUI(s =>
+            {
+                s.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
+                s.RoutePrefix = "api/docs";
+            });
 
-            app.UseMvcWithDefaultRoute();
+            app.UseMvc();
         }
     }
 }
