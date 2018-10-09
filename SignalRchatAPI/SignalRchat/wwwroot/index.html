@@ -47,6 +47,14 @@
                 document.getElementById('discussion').appendChild(liElement);
             });
 
+            connection.on('currentConnections', function (count) {
+                // Html encode display name and message.
+                // Add the message to the page.
+                var liElement = document.createElement('li');
+                liElement.innerHTML = '<strong> Current connections: </strong>:&nbsp;&nbsp;' + count;
+                document.getElementById('discussion').appendChild(liElement);
+            });
+
             // Transport fallback functionality is now built into start.
             connection.start()
                 .then(function () {
