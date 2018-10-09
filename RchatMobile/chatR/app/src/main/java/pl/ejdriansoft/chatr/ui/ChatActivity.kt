@@ -1,8 +1,8 @@
-package pl.ejdriansoft.chatr
+package pl.ejdriansoft.chatr.ui
 
 
+import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.Message
 import android.provider.Settings
 import android.provider.Settings.Secure.getString
 import android.widget.ArrayAdapter
@@ -11,41 +11,38 @@ import androidx.appcompat.app.AppCompatActivity
 import com.crashlytics.android.Crashlytics
 import com.google.gson.Gson
 import com.smartarmenia.dotnetcoresignalrclientjava.*
-import com.squareup.moshi.Moshi
 import io.fabric.sdk.android.Fabric
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_chat.*
 import org.jetbrains.anko.*
+import pl.ejdriansoft.chatr.R
 import pl.ejdriansoft.chatr.services.ChatRAPI
+import pl.ejdriansoft.chatr.services.api.Prefs
 import java.util.ArrayList
 
 
-class MainActivity : AppCompatActivity(), HubConnectionListener, HubEventListener, AnkoLogger {
+class ChatActivity : AppCompatActivity(), HubConnectionListener, HubEventListener, AnkoLogger {
 
     lateinit var arrayAdapter: ArrayAdapter<String>
     private lateinit var hubConnection: WebSocketHubConnectionP2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Fabric.with(this, Crashlytics())
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_chat)
 
-        val hubConnection = WebSocketHubConnectionP2("http://80.211.11.214/chat", "")
-        val idPhone = getString(this.contentResolver,
-                Settings.Secure.ANDROID_ID)
+        hubConnection = WebSocketHubConnectionP2("http://ejdriansoft.cloud/chat", "")
+        val name = Prefs(this).nickname
 
         val messageList = ArrayList<String>()
-        arrayAdapter = ArrayAdapter(this@MainActivity,
-                android.R.layout.simple_list_item_1, messageList)
+        arrayAdapter = ArrayAdapter(this@ChatActivity,
+                R.layout.item_chat, messageList)
         lvMessages.adapter = arrayAdapter
         getMessages(arrayAdapter)
-
-//        connectHub(hubConnection, arrayAdapter)
 
         bSend.setOnClickListener { _ ->
             val message = etMessageText.text.toString()
             etMessageText.setText("")
             try {
-                hubConnection.invoke("Send", idPhone, message)
+                hubConnection.invoke("Send", name, message)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -53,7 +50,11 @@ class MainActivity : AppCompatActivity(), HubConnectionListener, HubEventListene
         startHubConnection(hubConnection)
 
         hubConnection.subscribeToEvent("broadcastMessage", this)
-
+        hubConnection.subscribeToEvent("currentConnections") { message ->
+            runOnUiThread {
+                tvMain.text = "Current connections: ${message.arguments[0].asString}"
+            }
+        }
     }
 
     private fun getMessages(adapter: ArrayAdapter<String>) {
@@ -87,39 +88,27 @@ class MainActivity : AppCompatActivity(), HubConnectionListener, HubEventListene
 
     override fun onEventMessage(message: HubMessage) {
         runOnUiThread {
-            runOnUiThread {
-                info { "${message.target}\n${Gson().toJson(message.arguments)}" }
-                //info {Gson().toJson(message.arguments)}
-                //Moshi().adapter(Message::class.java).fromJson(Gson().toJson(message.arguments))
-                arrayAdapter.add("${message.arguments[0].toString()}: ${message.arguments[1].toString()}")
-                arrayAdapter.notifyDataSetChanged()
-            }
+            arrayAdapter.add("${message.arguments[0].asString}: ${message.arguments[1].asString}")
+            arrayAdapter.notifyDataSetChanged()
         }
     }
 
     override fun onConnected() {
-        runOnUiThread { Toast.makeText(this@MainActivity, "Connected", Toast.LENGTH_SHORT).show() }
+        runOnUiThread { Toast.makeText(this@ChatActivity, "Connected", Toast.LENGTH_SHORT).show() }
     }
 
     override fun onDisconnected() {
-        runOnUiThread { Toast.makeText(this@MainActivity, "Disconnected", Toast.LENGTH_SHORT).show() }
+        runOnUiThread { Toast.makeText(this@ChatActivity, "Disconnected", Toast.LENGTH_SHORT).show() }
     }
 
     override fun onMessage(message: HubMessage) {
         runOnUiThread {
-            Toast.makeText(this@MainActivity, "${message.target}\n${Gson().toJson(message.arguments)}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@ChatActivity, "${message.target}\n${Gson().toJson(message.arguments)}", Toast.LENGTH_SHORT).show()
         }
     }
 
     override fun onError(exception: Exception) {
-        runOnUiThread { Toast.makeText(this@MainActivity, exception.message, Toast.LENGTH_SHORT).show() }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        hubConnection.removeListener(this)
-        hubConnection.unSubscribeFromEvent("Send", this)
-        hubConnection.disconnect()
+        runOnUiThread { Toast.makeText(this@ChatActivity, exception.message, Toast.LENGTH_SHORT).show() }
     }
 }
 
