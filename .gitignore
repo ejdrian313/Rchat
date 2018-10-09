@@ -32,3 +32,14 @@ _ReSharper*/
 packages/
 /GitExtensions.settings
 /SignalRchatAPI/SignalRchat/appsettings.json
+/RchatMobile/chatR/.gradle/4.9-rc-1/fileHashes/fileHashes.bin
+/RchatMobile/chatR/.gradle/4.9-rc-1/fileHashes/fileHashes.lock
+/RchatMobile/chatR/.gradle/4.9-rc-1/fileHashes/resourceHashesCache.bin
+/RchatMobile/chatR/.gradle/4.9-rc-1/javaCompile/classAnalysis.bin
+/RchatMobile/chatR/.gradle/4.9-rc-1/javaCompile/javaCompile.lock
+/RchatMobile/chatR/.gradle/4.9-rc-1/javaCompile/taskHistory.bin
+/RchatMobile/chatR/.gradle/4.9-rc-1/taskHistory/taskHistory.bin
+/RchatMobile/chatR/.gradle/4.9-rc-1/taskHistory/taskHistory.lock
+/RchatMobile/chatR/.gradle/buildOutputCleanup/buildOutputCleanup.lock
+/RchatMobile/chatR/.idea/caches/build_file_checksums.ser
+/RchatMobile/chatR/.idea/workspace.xml
