@@ -18,7 +18,6 @@ namespace SignalRchat.Services.DAO.Models
 
         [BsonId]
         [BsonElement("id")]
-        [BsonRepresentation(BsonType.String)]
         public int Id { get; set; }
 
         [BsonElement("name")]
@@ -38,5 +37,8 @@ namespace SignalRchat.Services.DAO.Models
 
         [BsonElement("isactive")]
         public bool IsActive { get; set; }
+
+        [BsonElement("isdeleted")]
+        public bool IsDeleted { get; set; }
     }
 }

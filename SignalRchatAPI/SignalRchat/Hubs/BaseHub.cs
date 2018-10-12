@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using NLog;
@@ -9,17 +8,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SignalRchat.Controllers
+namespace SignalRchat.Hubs
 {
-
-    [EnableCors("CorsPolicy")]
-    [Route("api/[Controller]/[Action]")]
-    public class BaseController : Controller
+    public class BaseHub : Hub
     {
         protected readonly AppDbContext _context;
         protected readonly ILogger _logger;
 
-        public BaseController(IOptions<Settings> options, IMongoClient context)
+        public BaseHub(IOptions<Settings> options, IMongoClient context)
         {
             _context = new AppDbContext(options, context);
             _logger = LogManager.GetCurrentClassLogger();

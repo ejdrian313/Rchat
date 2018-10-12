@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using SignalRchat.Models;
 using SignalRchat.Services;
 using SignalRchat.Services.DAO;
+using SignalRchat.Services.DAO.Models;
 using SignalRchat.Services.Helpers;
 using System;
 using System.Collections.Generic;
@@ -11,18 +12,17 @@ using System.Threading.Tasks;
 
 namespace SignalRchat.Hubs
 {
-    public class ChatHub : Hub
+    public class ChatHub : BaseHub
     {
-        private IMongoClient _mongo;
-        
-        public ChatHub(IMongoClient mongo) : base()
+        public ChatHub(IOptions<Settings> options, IMongoClient context) : base(options, context)
         {
-            _mongo = mongo;
         }
 
         public override Task OnConnectedAsync()
         {
             UserHandler.ConnectedIds.Add(Context.ConnectionId);
+            _logger.Info(Context.ConnectionId);
+
             Clients.All.SendAsync("currentConnections", UserHandler.ConnectedIds.Count());
             return base.OnConnectedAsync();
         }
@@ -36,11 +36,12 @@ namespace SignalRchat.Hubs
 
         public void Send(string name, string message)
         {
-            _mongo.GetDatabase("chatrdb").GetCollection<Message>("Messages").InsertOneAsync(new Message
-            {
-                Name = name,
-                Body = message
-            });
+            _context.Messages.InsertOneAsync(
+                new Message
+                {
+                    Name = name,
+                    Body = message
+                });
 
             Clients.All.SendAsync("broadcastMessage", name, message);
         }

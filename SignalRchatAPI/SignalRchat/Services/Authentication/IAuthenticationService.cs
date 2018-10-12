@@ -6,6 +6,6 @@ namespace SignalRchat.Services.Authentication
 {
     public interface IAuthenticationService
     {
-        Task<IActionResult> Login(LoginVm model);
+        IActionResult Login(LoginVm model);
     }
 }

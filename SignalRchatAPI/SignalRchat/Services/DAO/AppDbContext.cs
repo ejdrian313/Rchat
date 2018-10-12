@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using SignalRchat.Models;
 using SignalRchat.Services.DAO.Models;
+using SignalRchat.Services.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SignalRchat.Services.DAO
 {
-    public class AppDbContext 
+    public class AppDbContext
     {
 
         private readonly IMongoDatabase _db;
@@ -19,8 +19,10 @@ namespace SignalRchat.Services.DAO
             _db = mongo.GetDatabase(options.Value.Database);
         }
 
-        public IMongoCollection<User> Users => _db.GetCollection<User>("Games");
-        public IMongoCollection<Message> Messages => _db.GetCollection<Message>("Messages");
+        public IMongoCollection<User> Users => _db.GetCollection<User>("users");
+        public IMongoCollection<Conversation> Conversations => _db.GetCollection<Conversation>("conversations");
+        public IMongoCollection<Message> Messages => _db.GetCollection<Message>("messages");
 
     }
+   
 }

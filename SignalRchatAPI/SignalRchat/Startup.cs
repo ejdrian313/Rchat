@@ -15,7 +15,9 @@ using MongoDB.Driver;
 using MongoDB.Driver.Core.Events;
 using SignalRchat.Hubs;
 using SignalRchat.Services;
+using SignalRchat.Services.Authentication;
 using SignalRchat.Services.DAO;
+using SignalRchat.Services.Helpers;
 using SQLitePCL;
 using Swashbuckle.AspNetCore.Swagger;
 
@@ -23,9 +25,19 @@ namespace SignalRchat
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly IHostingEnvironment _env;
+        public Startup(IConfiguration configuration, IHostingEnvironment environment)
         {
+            _env = environment;
+
             Configuration = configuration;
+
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(_env.ContentRootPath)
+                .AddJsonFile($"appsettings.json", optional: false, reloadOnChange: true)
+                .AddEnvironmentVariables();
+
+            AppSettingsService.Configuration = builder.Build();
         }
 
         public IConfiguration Configuration { get; }
@@ -76,19 +88,28 @@ namespace SignalRchat
             });
 
             #region DI
+
+            services.AddTransient<ICipherService, CipherService>();
+            services.AddTransient<IGenerator, Generator>();
+            services.AddTransient<ITokenService, TokenService>();
+            services.AddTransient<IAuthenticationService, AuthenticationService>();
+
+
             #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ICipherService cipherService, ILogger<Startup> logger)
         {
+            app.SeedDatabase(cipherService);
+
             app.UseAuthentication();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseHttpsRedirection();
-            app.UseHsts();
+            //app.UseHttpsRedirection();
+            //app.UseHsts();
             app.UseCors("CorsPolicy");
 
             app.UseFileServer();

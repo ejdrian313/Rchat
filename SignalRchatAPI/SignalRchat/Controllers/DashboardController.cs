@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using SignalRchat.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +12,7 @@ namespace SignalRchat.Controllers
     public class DashboardController : BaseController
     {
         
-        public DashboardController(IMongoClient mongo) : base(mongo)
+        public DashboardController(IOptions<Settings> options, IMongoClient mongo) : base(options, mongo)
         {
         }
 
@@ -20,7 +20,7 @@ namespace SignalRchat.Controllers
         [AllowAnonymous]
         public IActionResult GetAllMessages()
         {
-            return Ok(_context.GetCollection<Message>("Messages").Aggregate().ToList());
+            return Ok(_context.Messages.Aggregate().ToList());
         }
     }
 }

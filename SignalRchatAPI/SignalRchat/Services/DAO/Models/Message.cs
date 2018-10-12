@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace SignalRchat.Services.DAO.Models
 {
-    [BsonCollection("Messages")]
     public class Message
     {
         [BsonId]

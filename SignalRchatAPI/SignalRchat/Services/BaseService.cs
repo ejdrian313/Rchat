@@ -1,19 +1,19 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using NLog;
+using SignalRchat.Services.DAO;
 
-namespace SignalRchat.Services.Authentication
+namespace SignalRchat.Services
 {
     public class BaseService
     {
-        protected readonly IMongoClient _context;
+        protected readonly AppDbContext _context;
         protected readonly ILogger _logger;
-        protected readonly IMapper _mapper;
 
-        public BaseService(IMongoClient context, IMapper mapper)
+        public BaseService(IOptions<Settings> options, IMongoClient context)
         {
-            _context = context;
-            _mapper = mapper;
+            _context = new AppDbContext(options, context);
             _logger = LogManager.GetCurrentClassLogger();
         }
     }
