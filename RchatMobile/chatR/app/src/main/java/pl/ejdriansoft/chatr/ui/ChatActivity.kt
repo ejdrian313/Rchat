@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.provider.Settings
 import android.provider.Settings.Secure.getString
+import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -67,11 +68,15 @@ class ChatActivity : AppCompatActivity(), HubConnectionListener, HubEventListene
                         adapter.add("${it.name}: ${it.body}")
                     }
                     adapter.notifyDataSetChanged()
-                    lvMessages.smoothScrollToPosition(adapter.count)
+                    progress.visibility = View.GONE
+
+//                    lvMessages.smoothScrollToPosition(adapter.count)
                 }
             } else {
                 runOnUiThread {
-                    toast("Error loading messages").show()
+                    progress.visibility = View.GONE
+                    tvMain.text = getString(R.string.error_load_messages)
+                    toast(getString(R.string.error_load_messages)).show()
                 }
             }
         }

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SignalRchat.Models
+namespace SignalRchat.Services.DAO.Models
 {
     [BsonCollection("Messages")]
     public class Message

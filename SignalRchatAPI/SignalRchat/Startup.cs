@@ -15,6 +15,8 @@ using MongoDB.Driver;
 using MongoDB.Driver.Core.Events;
 using SignalRchat.Hubs;
 using SignalRchat.Services;
+using SignalRchat.Services.DAO;
+using SQLitePCL;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace SignalRchat
@@ -31,6 +33,11 @@ namespace SignalRchat
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<Settings>(options =>
+            {
+                options.ConnectionString = Configuration.GetSection("MongoConnection:ConnectionString").Value;
+                options.Database = Configuration.GetSection("MongoConnection:Database").Value;
+            });
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy", builder => builder
@@ -67,16 +74,21 @@ namespace SignalRchat
                     { "Bearer", new string[] { } }
                 });
             });
+
+            #region DI
+            #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseAuthentication();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseHttpsRedirection();
+            app.UseHsts();
             app.UseCors("CorsPolicy");
 
             app.UseFileServer();
@@ -86,7 +98,7 @@ namespace SignalRchat
                 routes.MapHub<ChatHub>("/chat");
             });
 
-            
+
             app.UseSwagger();
             app.UseSwaggerUI(s =>
             {
@@ -96,5 +108,11 @@ namespace SignalRchat
 
             app.UseMvc();
         }
+    }
+
+    public class Settings
+    {
+        public string ConnectionString { get; set; }
+        public string Database { get; set; }
     }
 }
