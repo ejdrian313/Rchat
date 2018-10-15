@@ -16,29 +16,21 @@ namespace SignalRchat.Services.DAO.Models
             CreationDate = DateTime.Now;
         }
 
-        [BsonId]
-        [BsonElement("id")]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
-        [BsonElement("name")]
         public string Name { get; set; }
 
-        [BsonElement("email")]
         public string Email { get; set; }
 
-        [BsonElement("password")]
         public string Password { get; set; }
 
-        [BsonElement("fcmtoken")]
         public string FcmToken { get; set; }
 
-        [BsonElement("creationdate")]
         public DateTime CreationDate { get; set; }
 
-        [BsonElement("isactive")]
         public bool IsActive { get; set; }
 
-        [BsonElement("isdeleted")]
         public bool IsDeleted { get; set; }
+        public string Salt { get; internal set; }
     }
 }

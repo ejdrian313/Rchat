@@ -24,12 +24,22 @@ namespace SignalRchat.Services.Helpers
                 try
                 {
                     var context = serviceScope.ServiceProvider.GetService<IMongoClient>();
-                    var users = context.GetDatabase("chatrdb").GetCollection<User>("users");
+                    var databse = context.GetDatabase("chatrdb");
+                    var users = databse.GetCollection<User>("users");
+                    var conversations = databse.GetCollection<Conversation>("conversations");
 
 
                     if (!users.Aggregate().Any())
-                        Users().ForEach( user => users.InsertOne(user) );
-                  
+                    {
+                        Users().ForEach(user => users.InsertOne(user));
+                        var userList = users.Aggregate().ToList();
+
+
+                        if (!conversations.Aggregate().Any())
+                            Conversations(userList[0].Id.ToString(), userList[1].Id.ToString()).ForEach(conversation => conversations.InsertOne(conversation));
+
+                    }
+
                 }
                 catch (Exception ex)
                 {
@@ -40,32 +50,90 @@ namespace SignalRchat.Services.Helpers
             }
         }
 
-
+        private static List<Conversation> Conversations(string id1, string id2)
+        {
+            return new List<Conversation>
+            {
+                new Conversation
+                {
+                   Id = Guid.NewGuid(),
+                   UserId = new List<String>
+                   {
+                        id1,
+                        id2
+                   },
+                   Messages = new List<Message>
+                   {
+                       new Message
+                       {
+                           Id = Guid.NewGuid(),
+                           Body = "test message",
+                           Name = "filu34"
+                       },
+                       new Message
+                       {
+                           Id = Guid.NewGuid(),
+                           Body = "HUO HUO",
+                           Name = "ejdrian313"
+                       },
+                       new Message
+                       {
+                           Id = Guid.NewGuid(),
+                           Body = "test 3",
+                           Name = "ejdrian313"
+                       },
+                   }
+                }
+            };
+        }
         private static List<User> Users()
         {
             return new List<User>
             {
                 new User
                 {
-                    Id = 1,
+                    Id = Guid.NewGuid(),
                     Name = "filu34",
                     Email = "filu34@gmail.com",
 
                     Password = _cipherService.Encrypt("Admin123"),
+                    Salt = BCrypt.Net.BCrypt.GenerateSalt(30),
                     CreationDate = DateTime.Now,
                     IsActive = true,
                 },
                 new User
                 {
-                    Id = 2,
+                    Id = Guid.NewGuid(),
                     Name = "ejdrian313",
                     Email = "adrian.kujawski.313@gmail.com",
                 
                     Password = _cipherService.Encrypt("12345678"),
+                    Salt = BCrypt.Net.BCrypt.GenerateSalt(30),
                     CreationDate = DateTime.Now,
                     IsActive = true,
                 },
-              
+               new User
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Huo",
+                    Email = "a3@gmail.com",
+
+                    Password = _cipherService.Encrypt("Admin123"),
+                    Salt = BCrypt.Net.BCrypt.GenerateSalt(30),
+                    CreationDate = DateTime.Now,
+                    IsActive = true,
+                },
+                new User
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Buk",
+                    Email = "a@a.pl",
+
+                    Password = _cipherService.Encrypt("Admin123"),
+                    Salt = BCrypt.Net.BCrypt.GenerateSalt(30),
+                    CreationDate = DateTime.Now,
+                    IsActive = true,
+                },
             };
         }
     }

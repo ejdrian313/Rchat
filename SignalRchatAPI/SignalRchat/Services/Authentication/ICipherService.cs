@@ -3,6 +3,6 @@
     public interface ICipherService
     {
         string Encrypt(string password);
-        string Decrypt(string cipherText);
+        bool Verify(string userSubmittedPassword, string hashedPassword);
     }
 }

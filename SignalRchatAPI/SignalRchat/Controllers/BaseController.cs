@@ -1,17 +1,16 @@
-﻿using Microsoft.AspNetCore.Cors;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using NLog;
+using SignalRchat.Services.Authentication;
 using SignalRchat.Services.DAO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace SignalRchat.Controllers
 {
-
+    [Authorize]
     [EnableCors("CorsPolicy")]
     [Route("api/[Controller]/[Action]")]
     public class BaseController : Controller
@@ -24,5 +23,9 @@ namespace SignalRchat.Controllers
             _context = new AppDbContext(options, context);
             _logger = LogManager.GetCurrentClassLogger();
         }
+
+        protected string UserId() => User.FindFirstValue(TokenClaim.UserId) ?? "";
+        protected string UserName() => User.FindFirstValue(TokenClaim.UserName) ?? "";
+
     }
 }

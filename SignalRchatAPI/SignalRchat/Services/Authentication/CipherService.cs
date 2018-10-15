@@ -4,22 +4,18 @@ namespace SignalRchat.Services.Authentication
 {
     public class CipherService : ICipherService
     {
-        private readonly IDataProtectionProvider _dataProtectionProvider;
-        public CipherService(IDataProtectionProvider dataProtectionProvider)
+        public CipherService()
         {
-            _dataProtectionProvider = dataProtectionProvider;
         }
+
         public string Encrypt(string password)
         {
-            var protector = _dataProtectionProvider.CreateProtector(AppSettingsService.CipherKey);
-            var hash = protector.Protect(password);
-            return hash;
+            return BCrypt.Net.BCrypt.HashPassword(password, BCrypt.Net.SaltRevision.Revision2Y); 
         }
-        public string Decrypt(string cipherText)
+        public bool Verify(string userSubmittedPassword, string hashedPassword)
         {
-            var protector = _dataProtectionProvider.CreateProtector(AppSettingsService.CipherKey);
-            var response = protector.Unprotect(cipherText);
-            return response;
+            bool validPassword = BCrypt.Net.BCrypt.Verify(userSubmittedPassword, hashedPassword);
+            return validPassword;
         }
     }
 }

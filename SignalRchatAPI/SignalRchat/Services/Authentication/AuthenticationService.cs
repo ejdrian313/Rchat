@@ -50,9 +50,9 @@ namespace SignalRchat.Services.Authentication
                     if (string.IsNullOrWhiteSpace(user.Password))
                         return new BadRequestObjectResult("Not authorized");
 
-                    var decryptedPassword = _cipherService.Decrypt(user.Password);
+                    var match = _cipherService.Verify(model.Password, user.Password);
 
-                    if (decryptedPassword != model.Password)
+                    if (!match)
                         return new BadRequestObjectResult("Not authorized");
                 }
                 else return new BadRequestObjectResult("Not authorized");

@@ -1,23 +1,19 @@
 package pl.ejdriansoft.chatr.ui
 
 
-import android.annotation.SuppressLint
 import android.os.Bundle
-import android.provider.Settings
-import android.provider.Settings.Secure.getString
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.crashlytics.android.Crashlytics
 import com.google.gson.Gson
 import com.smartarmenia.dotnetcoresignalrclientjava.*
-import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.activity_chat.*
 import org.jetbrains.anko.*
 import pl.ejdriansoft.chatr.R
 import pl.ejdriansoft.chatr.services.ChatRAPI
-import pl.ejdriansoft.chatr.services.api.Prefs
+import pl.ejdriansoft.chatr.services.Consts
+import pl.ejdriansoft.chatr.services.Prefs
 import java.util.ArrayList
 
 
@@ -30,7 +26,7 @@ class ChatActivity : AppCompatActivity(), HubConnectionListener, HubEventListene
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
-        hubConnection = WebSocketHubConnectionP2("http://ejdriansoft.cloud/chat", "")
+        hubConnection = WebSocketHubConnectionP2("http://ejdriansoft.cloud/chat", "Bearer ${Consts.token}")
         val name = Prefs(this).nickname
 
         val messageList = ArrayList<String>()
@@ -59,7 +55,7 @@ class ChatActivity : AppCompatActivity(), HubConnectionListener, HubEventListene
     }
 
     private fun getMessages(adapter: ArrayAdapter<String>) {
-        val call = ChatRAPI().allMessages()
+        val call = ChatRAPI().conversations()
         doAsync {
             val response = call.execute()
             if (response.isSuccessful) {

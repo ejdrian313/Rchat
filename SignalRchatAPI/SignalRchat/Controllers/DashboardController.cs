@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using SignalRchat.Services.DAO.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,16 +12,33 @@ namespace SignalRchat.Controllers
 {
     public class DashboardController : BaseController
     {
-        
+
         public DashboardController(IOptions<Settings> options, IMongoClient mongo) : base(options, mongo)
         {
         }
 
         [HttpGet]
-        [AllowAnonymous]
-        public IActionResult GetAllMessages()
+        public IActionResult Conversations()
         {
-            return Ok(_context.Messages.Aggregate().ToList());
+            try
+            {
+                var uid = UserId();
+                var all = _context.Conversations.Aggregate().ToList();
+                var userConversations = new List<Conversation>();
+                foreach (var conversation in all)
+                {
+                    if (conversation.UserId.Contains(uid))
+                    {
+                        userConversations.Add(conversation);
+                    }
+                }
+                return Ok(userConversations);
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e);
+                return BadRequest("Error occured");
+            }
         }
     }
 }

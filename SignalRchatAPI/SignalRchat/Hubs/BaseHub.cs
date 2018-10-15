@@ -2,11 +2,9 @@
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using NLog;
+using SignalRchat.Services.Authentication;
 using SignalRchat.Services.DAO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace SignalRchat.Hubs
 {
@@ -20,5 +18,8 @@ namespace SignalRchat.Hubs
             _context = new AppDbContext(options, context);
             _logger = LogManager.GetCurrentClassLogger();
         }
+
+        protected string UserName() => Context.User.FindFirstValue(TokenClaim.UserName) ?? "";
+
     }
 }

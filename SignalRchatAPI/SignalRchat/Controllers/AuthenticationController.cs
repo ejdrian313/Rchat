@@ -36,35 +36,5 @@ namespace SignalRchat.Controllers
 
             return response;
         }
-
-        [HttpGet]
-        [AllowAnonymous]
-        public IActionResult Create()
-        {
-            _context.Users.InsertMany(new List<User>
-            {
-                new User
-                {
-                    Name = "filu34",
-                    Email = "filu34@gmail.com",
-
-                    Password = _cipherService.Encrypt("Admin123"),
-                    CreationDate = DateTime.Now,
-                    IsActive = true,
-                },
-                new User
-                {
-                    Name = "ejdrian313",
-                    Email = "adrian.kujawski.313@gmail.pl",
-
-                    Password = _cipherService.Encrypt("12345678"),
-                    CreationDate = DateTime.Now,
-                    IsActive = true,
-                },
-
-            });
-
-            return Ok();
-        }
     }
 }

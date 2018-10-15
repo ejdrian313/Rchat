@@ -1,24 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using MongoDB.Bson;
+using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
-using MongoDB.Driver.Core.Events;
 using SignalRchat.Hubs;
 using SignalRchat.Services;
 using SignalRchat.Services.Authentication;
-using SignalRchat.Services.DAO;
 using SignalRchat.Services.Helpers;
-using SQLitePCL;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace SignalRchat
@@ -50,6 +47,42 @@ namespace SignalRchat
                 options.ConnectionString = Configuration.GetSection("MongoConnection:ConnectionString").Value;
                 options.Database = Configuration.GetSection("MongoConnection:Database").Value;
             });
+
+
+            #region JWT
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = false,
+                        ValidateIssuerSigningKey = true,
+
+                        NameClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier",
+                        ValidIssuer = $"{AppSettingsService.Configuration["AppSettings:Authentication:IssuserName"]}",
+                        ValidAudience = $"{AppSettingsService.Configuration["AppSettings:Authentication:AudienceName"]}",
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes($"{AppSettingsService.Configuration["AppSettings:Authentication:Secret"]}")),
+                        ClockSkew = TimeSpan.FromMinutes(5) //5 minute tolerance for the expiration date
+                    };
+
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnAuthenticationFailed = context =>
+                        {
+                            Console.WriteLine("OnAuthenticationFailed: " + context.Exception.Message);
+                            return Task.CompletedTask;
+                        },
+                        OnTokenValidated = context =>
+                        {
+                            Console.WriteLine("OnTokenValidated: " + context.SecurityToken);
+                            return Task.CompletedTask;
+                        }
+                    };
+                });
+
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy", builder => builder
@@ -60,10 +93,10 @@ namespace SignalRchat
                     .SetPreflightMaxAge(TimeSpan.FromSeconds(2520))
                     .Build());
             });
+            #endregion
 
             services.AddAutoMapper();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddDataProtection();
             services.AddSignalR(o =>
             {
                 o.EnableDetailedErrors = true;
