@@ -43,3 +43,5 @@ packages/
 /RchatMobile/chatR/.gradle/buildOutputCleanup/buildOutputCleanup.lock
 /RchatMobile/chatR/.idea/caches/build_file_checksums.ser
 /RchatMobile/chatR/.idea/workspace.xml
+SignalRchatAPI/SignalRchat/appsettings.json
+SignalRchatAPI/SignalRchat/appsettings.Development.json
