@@ -141,8 +141,8 @@ namespace SignalRchat
             {
                 app.UseDeveloperExceptionPage();
             }
-            //app.UseHttpsRedirection();
-            //app.UseHsts();
+            app.UseHttpsRedirection();
+            app.UseHsts();
             app.UseCors("CorsPolicy");
 
             app.UseFileServer();
