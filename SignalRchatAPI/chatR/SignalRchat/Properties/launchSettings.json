@@ -3,8 +3,8 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:52917",
-      "sslPort": 0
+      "applicationUrl": "http://localhost:5000",
+      "sslPort": 443
     }
   },
   "$schema": "http://json.schemastore.org/launchsettings.json",
@@ -20,7 +20,7 @@
     "SignalRchat": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "api/values",
+      "launchUrl": "api/docs",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
@@ -29,7 +29,7 @@
     "Docker": {
       "commandName": "Docker",
       "launchBrowser": true,
-      "launchUrl": "{Scheme}://localhost:{ServicePort}/api/values"
+      "launchUrl": "{Scheme}://localhost:{ServicePort}/api/docs"
     }
   }
 }
