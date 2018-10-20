@@ -32,6 +32,7 @@ _ReSharper*/
 packages/
 /GitExtensions.settings
 /SignalRchatAPI/chatR/SignalRchat/appsettings.json
+/SignalRchatAPI/chatR/SignalRchat/appsettings.Development.json
 /SignalRchatAPI/nginx/cert.crt
 /SignalRchatAPI/nginx/cert_key.key
 /RchatMobile/chatR/.gradle/4.9-rc-1/fileHashes/fileHashes.bin
