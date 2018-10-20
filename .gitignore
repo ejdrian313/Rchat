@@ -31,7 +31,9 @@ _ReSharper*/
 #Nuget packages folder
 packages/
 /GitExtensions.settings
-/SignalRchatAPI/SignalRchat/appsettings.json
+/SignalRchatAPI/chatR/SignalRchat/appsettings.json
+/SignalRchatAPI/nginx/cert.crt
+/SignalRchatAPI/nginx/cert_key.key
 /RchatMobile/chatR/.gradle/4.9-rc-1/fileHashes/fileHashes.bin
 /RchatMobile/chatR/.gradle/4.9-rc-1/fileHashes/fileHashes.lock
 /RchatMobile/chatR/.gradle/4.9-rc-1/fileHashes/resourceHashesCache.bin
