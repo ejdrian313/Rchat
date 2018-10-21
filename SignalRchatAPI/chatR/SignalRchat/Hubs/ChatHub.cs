@@ -37,9 +37,9 @@ namespace SignalRchat.Hubs
 
         public void Send(string message, string conversationId)
         {
-            var conv = _context.Conversations.Aggregate().ToList().First(c => c.Id.ToString() == conversationId);
+            var conv = _context.Messages.Aggregate().ToList();
 
-            conv.Messages.Add(
+            conv.Add(
               new Message
               {
                   Name = UserName(),

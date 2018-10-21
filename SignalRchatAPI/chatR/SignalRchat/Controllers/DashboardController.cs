@@ -18,6 +18,12 @@ namespace SignalRchat.Controllers
         }
 
         [HttpGet]
+        public IActionResult GetAllMessages()
+        {
+            return Ok(_context.Messages.Aggregate().ToList());
+        }
+
+        [HttpGet]
         public IActionResult Conversations()
         {
             try
