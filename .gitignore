@@ -31,9 +31,11 @@ _ReSharper*/
 #Nuget packages folder
 packages/
 /GitExtensions.settings
+/SignalRchatAPI/chatR/SignalRchat/bin/
+/SignalRchatAPI/chatR/SignalRchat/obj/
 /SignalRchatAPI/chatR/SignalRchat/appsettings.json
 /SignalRchatAPI/chatR/SignalRchat/appsettings.Development.json
-/SignalRchatAPI/nginx/cert.crt
+/SignalRchatAPI/nginx/cert.pem
 /SignalRchatAPI/nginx/cert_key.key
 /RchatMobile/chatR/.gradle/4.9-rc-1/fileHashes/fileHashes.bin
 /RchatMobile/chatR/.gradle/4.9-rc-1/fileHashes/fileHashes.lock
@@ -48,3 +50,9 @@ packages/
 /RchatMobile/chatR/.idea/workspace.xml
 SignalRchatAPI/SignalRchat/appsettings.json
 SignalRchatAPI/SignalRchat/appsettings.Development.json
+/RchatMobile/chatR/.idea/
+/RchatMobile/chatR/.idea/libraries/
+RchatMobile/chatR/.idea/libraries/Gradle__org_jetbrains_anko_anko_commons_0_10_7.xml
+RchatMobile/chatR/.idea/libraries/Gradle__org_jetbrains_anko_anko_appcompat_v7_coroutines_0_10_7.xml
+RchatMobile/chatR/.idea/libraries/Gradle__org_jetbrains_anko_anko_0_10_7.xml
+RchatMobile/chatR/app/src/main/res/raw/cert.crt
