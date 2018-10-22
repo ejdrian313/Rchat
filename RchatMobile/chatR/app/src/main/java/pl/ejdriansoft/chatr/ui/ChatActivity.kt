@@ -26,8 +26,8 @@ class ChatActivity : AppCompatActivity(), HubConnectionListener, HubEventListene
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
-        hubConnection = WebSocketHubConnectionP2("http://ejdriansoft.cloud/chat", "Bearer ${Consts.token}")
-        val name = Prefs(this).nickname
+        info { Consts.token }
+        hubConnection = WebSocketHubConnectionP2("https://ejdriansoft.pl/chat", "Bearer ${Consts.token}")
 
         val messageList = ArrayList<String>()
         arrayAdapter = ArrayAdapter(this@ChatActivity,
@@ -39,7 +39,7 @@ class ChatActivity : AppCompatActivity(), HubConnectionListener, HubEventListene
             val message = etMessageText.text.toString()
             etMessageText.setText("")
             try {
-                hubConnection.invoke("Send", name, message)
+                hubConnection.invoke("Send", message)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -55,7 +55,7 @@ class ChatActivity : AppCompatActivity(), HubConnectionListener, HubEventListene
     }
 
     private fun getMessages(adapter: ArrayAdapter<String>) {
-        val call = ChatRAPI().conversations()
+        val call = ChatRAPI(this).messages()
         doAsync {
             val response = call.execute()
             if (response.isSuccessful) {
@@ -65,8 +65,6 @@ class ChatActivity : AppCompatActivity(), HubConnectionListener, HubEventListene
                     }
                     adapter.notifyDataSetChanged()
                     progress.visibility = View.GONE
-
-//                    lvMessages.smoothScrollToPosition(adapter.count)
                 }
             } else {
                 runOnUiThread {

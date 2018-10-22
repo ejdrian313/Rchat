@@ -1,0 +1,95 @@
+2018-10-22 18:34:36.5440 Info Message Template Auto Format enabled
+2018-10-22 18:34:36.5515 Info Loading assembly: NLog.Web.AspNetCore
+2018-10-22 18:34:36.5952 Info Adding target File Target[ownFile-web]
+2018-10-22 18:34:36.6027 Info Configured from an XML element in /home/ejdrian313/workspace/chatR/Rchat/SignalRchatAPI/chatR/SignalRchat/bin/Debug/netcoreapp2.1/nlog.config...
+2018-10-22 18:34:36.6176 Info Found 25 configuration items
+2018-10-22 18:35:43.1918 Info Message Template Auto Format enabled
+2018-10-22 18:35:43.1992 Info Loading assembly: NLog.Web.AspNetCore
+2018-10-22 18:35:43.2395 Info Adding target File Target[ownFile-web]
+2018-10-22 18:35:43.2473 Info Configured from an XML element in /home/ejdrian313/workspace/chatR/Rchat/SignalRchatAPI/chatR/SignalRchat/bin/Debug/netcoreapp2.1/nlog.config...
+2018-10-22 18:35:43.2621 Info Found 25 configuration items
+2018-10-22 18:36:51.6419 Info Logger closing down...
+2018-10-22 18:36:51.6457 Info Closing old configuration.
+2018-10-22 18:36:51.6551 Info Logger has been closed down.
+2018-10-22 18:36:51.6551 Info Shutting down logging...
+2018-10-22 18:36:51.6586 Info Logger has been shut down.
+2018-10-22 18:36:54.7708 Info Message Template Auto Format enabled
+2018-10-22 18:36:54.7793 Info Loading assembly: NLog.Web.AspNetCore
+2018-10-22 18:36:54.8246 Info Adding target File Target[ownFile-web]
+2018-10-22 18:36:54.8333 Info Configured from an XML element in /home/ejdrian313/workspace/chatR/Rchat/SignalRchatAPI/chatR/SignalRchat/bin/Debug/netcoreapp2.1/nlog.config...
+2018-10-22 18:36:54.8494 Info Found 25 configuration items
+2018-10-22 18:37:22.1212 Info Logger closing down...
+2018-10-22 18:37:22.1212 Info Closing old configuration.
+2018-10-22 18:37:22.1326 Info Logger has been closed down.
+2018-10-22 18:37:22.1345 Info Shutting down logging...
+2018-10-22 18:37:22.1345 Info Logger has been shut down.
+2018-10-22 18:37:26.0052 Info Message Template Auto Format enabled
+2018-10-22 18:37:26.0132 Info Loading assembly: NLog.Web.AspNetCore
+2018-10-22 18:37:26.0532 Info Adding target File Target[ownFile-web]
+2018-10-22 18:37:26.0613 Info Configured from an XML element in /home/ejdrian313/workspace/chatR/Rchat/SignalRchatAPI/chatR/SignalRchat/bin/Debug/netcoreapp2.1/nlog.config...
+2018-10-22 18:37:26.0763 Info Found 25 configuration items
+2018-10-22 18:37:52.4059 Info Logger closing down...
+2018-10-22 18:37:52.4059 Info Closing old configuration.
+2018-10-22 18:37:52.4156 Info Logger has been closed down.
+2018-10-22 18:37:52.4156 Info Shutting down logging...
+2018-10-22 18:37:52.4176 Info Logger has been shut down.
+2018-10-22 18:38:27.8509 Info Message Template Auto Format enabled
+2018-10-22 18:38:27.8595 Info Loading assembly: NLog.Web.AspNetCore
+2018-10-22 18:38:27.9040 Info Adding target File Target[ownFile-web]
+2018-10-22 18:38:27.9128 Info Configured from an XML element in /home/ejdrian313/workspace/chatR/Rchat/SignalRchatAPI/chatR/SignalRchat/bin/Debug/netcoreapp2.1/nlog.config...
+2018-10-22 18:38:27.9304 Info Found 25 configuration items
+2018-10-22 18:39:36.3991 Info Logger closing down...
+2018-10-22 18:39:36.4019 Info Closing old configuration.
+2018-10-22 18:39:36.4102 Info Logger has been closed down.
+2018-10-22 18:39:36.4102 Info Shutting down logging...
+2018-10-22 18:39:36.4102 Info Logger has been shut down.
+2018-10-22 18:39:40.7734 Info Message Template Auto Format enabled
+2018-10-22 18:39:40.7809 Info Loading assembly: NLog.Web.AspNetCore
+2018-10-22 18:39:40.8226 Info Adding target File Target[ownFile-web]
+2018-10-22 18:39:40.8302 Info Configured from an XML element in /home/ejdrian313/workspace/chatR/Rchat/SignalRchatAPI/chatR/SignalRchat/bin/Debug/netcoreapp2.1/nlog.config...
+2018-10-22 18:39:40.8448 Info Found 25 configuration items
+2018-10-22 18:40:10.9657 Info Logger closing down...
+2018-10-22 18:40:10.9657 Info Closing old configuration.
+2018-10-22 18:40:10.9768 Info Logger has been closed down.
+2018-10-22 18:40:10.9777 Info Shutting down logging...
+2018-10-22 18:40:10.9777 Info Logger has been shut down.
+2018-10-22 18:40:16.4219 Info Message Template Auto Format enabled
+2018-10-22 18:40:16.4427 Info Loading assembly: NLog.Web.AspNetCore
+2018-10-22 18:40:16.5412 Info Adding target File Target[ownFile-web]
+2018-10-22 18:40:16.5591 Info Configured from an XML element in /home/ejdrian313/workspace/chatR/Rchat/SignalRchatAPI/chatR/SignalRchat/bin/Debug/netcoreapp2.1/nlog.config...
+2018-10-22 18:40:16.5952 Info Found 25 configuration items
+2018-10-22 18:41:06.2498 Info Logger closing down...
+2018-10-22 18:41:06.2498 Info Closing old configuration.
+2018-10-22 18:41:06.2604 Info Logger has been closed down.
+2018-10-22 18:41:06.2613 Info Shutting down logging...
+2018-10-22 18:41:06.2613 Info Logger has been shut down.
+2018-10-22 18:41:10.1910 Info Message Template Auto Format enabled
+2018-10-22 18:41:10.1986 Info Loading assembly: NLog.Web.AspNetCore
+2018-10-22 18:41:10.2416 Info Adding target File Target[ownFile-web]
+2018-10-22 18:41:10.2490 Info Configured from an XML element in /home/ejdrian313/workspace/chatR/Rchat/SignalRchatAPI/chatR/SignalRchat/bin/Debug/netcoreapp2.1/nlog.config...
+2018-10-22 18:41:10.2637 Info Found 25 configuration items
+2018-10-22 18:41:25.0810 Info Logger closing down...
+2018-10-22 18:41:25.0842 Info Closing old configuration.
+2018-10-22 18:41:25.0950 Info Logger has been closed down.
+2018-10-22 18:41:25.0950 Info Shutting down logging...
+2018-10-22 18:41:25.0983 Info Logger has been shut down.
+2018-10-22 18:41:29.7815 Info Message Template Auto Format enabled
+2018-10-22 18:41:29.7896 Info Loading assembly: NLog.Web.AspNetCore
+2018-10-22 18:41:29.8305 Info Adding target File Target[ownFile-web]
+2018-10-22 18:41:29.8379 Info Configured from an XML element in /home/ejdrian313/workspace/chatR/Rchat/SignalRchatAPI/chatR/SignalRchat/bin/Debug/netcoreapp2.1/nlog.config...
+2018-10-22 18:41:29.8523 Info Found 25 configuration items
+2018-10-22 18:41:47.9332 Info Logger closing down...
+2018-10-22 18:41:47.9332 Info Closing old configuration.
+2018-10-22 18:41:47.9438 Info Logger has been closed down.
+2018-10-22 18:41:47.9438 Info Shutting down logging...
+2018-10-22 18:41:47.9462 Info Logger has been shut down.
+2018-10-22 18:41:50.9907 Info Message Template Auto Format enabled
+2018-10-22 18:41:50.9980 Info Loading assembly: NLog.Web.AspNetCore
+2018-10-22 18:41:51.0383 Info Adding target File Target[ownFile-web]
+2018-10-22 18:41:51.0457 Info Configured from an XML element in /home/ejdrian313/workspace/chatR/Rchat/SignalRchatAPI/chatR/SignalRchat/bin/Debug/netcoreapp2.1/nlog.config...
+2018-10-22 18:41:51.0607 Info Found 25 configuration items
+2018-10-22 18:46:08.5714 Info Logger closing down...
+2018-10-22 18:46:08.5769 Info Closing old configuration.
+2018-10-22 18:46:08.5887 Info Logger has been closed down.
+2018-10-22 18:46:08.5897 Info Shutting down logging...
+2018-10-22 18:46:08.5897 Info Logger has been shut down.

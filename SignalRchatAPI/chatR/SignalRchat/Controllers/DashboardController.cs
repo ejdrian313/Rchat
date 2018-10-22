@@ -20,7 +20,16 @@ namespace SignalRchat.Controllers
         [HttpGet]
         public IActionResult GetAllMessages()
         {
-            return Ok(_context.Messages.Aggregate().ToList());
+            try
+            {
+                var m = _context.Messages.Aggregate().ToList();
+                return Ok(m);
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e);
+                return BadRequest(e);
+            }
         }
 
         [HttpGet]

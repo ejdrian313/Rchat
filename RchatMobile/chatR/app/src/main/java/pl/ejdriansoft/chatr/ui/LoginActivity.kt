@@ -27,7 +27,7 @@ class LoginActivity : AppCompatActivity() {
             finish()
         }
 
-        val api = ChatRAPI()
+        val api = ChatRAPI(this)
         btnLogin.setOnClickListener {
             if (etNickname.text.isNullOrBlank()) {
                 etNickname.error = "Enter login"

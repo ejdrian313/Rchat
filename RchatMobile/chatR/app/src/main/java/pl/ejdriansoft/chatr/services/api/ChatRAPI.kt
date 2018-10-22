@@ -11,8 +11,20 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 import retrofit2.Call
+import retrofit2.http.Query
+import javax.net.ssl.HttpsURLConnection
+import javax.net.ssl.SSLContext
+import javax.net.ssl.TrustManager
+import javax.net.ssl.TrustManagerFactory
+import android.R.raw
+import android.content.Context
+import pl.ejdriansoft.chatr.R
+import java.security.KeyStore
+import java.security.cert.Certificate
+import java.security.cert.CertificateFactory
 
-class ChatRAPI {
+
+class ChatRAPI(context: Context) {
 
     private val api: ChatRService
     private val loggingInterceptor = HttpLoggingInterceptor()
@@ -33,18 +45,18 @@ class ChatRAPI {
         val retrofit = Retrofit
                 .Builder()
                 .client(okHttp)
-                .baseUrl("http://80.211.11.214/api/")
+                .baseUrl("https://ejdriansoft.pl/api/")
                 .addConverterFactory(MoshiConverterFactory.create())
                 .build()
 
         api = retrofit.create(ChatRService::class.java)
     }
 
-    fun conversations(): Call<List<Conversations>> {
+    fun messages(): Call<List<Message>> {
         return api.allMessages()
     }
 
-    fun login(login: String, pass: String) : Call<TokenVm> {
+    fun login(@Query("email") login: String, @Query("password") pass: String) : Call<TokenVm> {
         return api.login(login, pass)
     }
 }

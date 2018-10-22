@@ -27,7 +27,10 @@ namespace SignalRchat.Services.Helpers
                     var databse = context.GetDatabase("chatrdb");
                     var users = databse.GetCollection<User>("users");
                     var conversations = databse.GetCollection<Conversation>("conversations");
+                    var messages = databse.GetCollection<Message>("messages");
 
+                    if (!messages.Aggregate().Any())
+                        Messages().ForEach(m => messages.InsertOne(m));
 
                     if (!users.Aggregate().Any())
                     {
@@ -37,6 +40,8 @@ namespace SignalRchat.Services.Helpers
 
                         if (!conversations.Aggregate().Any())
                             Conversations(userList[0].Id.ToString(), userList[1].Id.ToString()).ForEach(conversation => conversations.InsertOne(conversation));
+
+                      
 
                     }
 
@@ -86,6 +91,20 @@ namespace SignalRchat.Services.Helpers
                 }
             };
         }
+
+         private static List<Message> Messages()
+        {
+            return new List<Message>
+            {
+                new Message
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "filu34",
+                    Body = "test"
+                }
+            };
+        }
+
         private static List<User> Users()
         {
             return new List<User>

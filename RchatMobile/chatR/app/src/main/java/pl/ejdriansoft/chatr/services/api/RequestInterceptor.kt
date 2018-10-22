@@ -4,6 +4,7 @@ package pl.ejdriansoft.chatr.services.api
 
 import okhttp3.Interceptor
 import okhttp3.Response
+import pl.ejdriansoft.chatr.services.Consts
 
 class RequestInterceptor : Interceptor {
     val headerKey = "No-Authentication"

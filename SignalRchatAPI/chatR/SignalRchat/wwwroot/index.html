@@ -26,14 +26,9 @@
 
             var messageInput = document.getElementById('message');
 
-            // Get the user name and store it to prepend to messages.
-            var name = prompt('Enter your name:', '');
-            // Set initial focus to message input box.
-            messageInput.focus();
-
             // Start the connection.
             var connection = new signalR.HubConnectionBuilder()
-                                .withUrl('/chat')
+                                .withUrl('/chat', { accessTokenFactory: () => "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhQGEucGwiLCJqdGkiOiJlZTc3ZjIyMi0zMjEwLTRiNGQtOGQ1OC04MDg1OTAxOWQzYTUiLCJ1c2VySWQiOiIxZGI0NWM3NS03OTIwLTQwODUtOWU2ZS0zYTgyMmQ3ZjFiNDkiLCJ1c2VyTmFtZSI6IkJ1ayIsIm5iZiI6MTU0MDIyMjYyOSwiZXhwIjoxNTQwNDM4NjI5LCJpc3MiOiJjaGF0Ui5BUEkiLCJhdWQiOiJjaGF0Ui5DTElFTlQifQ.JctTyguZThLv186kKCSYDopgQe5-3Xwv-Q6N5XzyEqM" } )
                                 .build();
 
             // Create a function that the hub can call to broadcast messages.
@@ -61,7 +56,7 @@
                     console.log('connection started');
                     document.getElementById('sendmessage').addEventListener('click', function (event) {
                         // Call the Send method on the hub.
-                        connection.invoke('send', name, messageInput.value);
+                        connection.invoke('send', messageInput.value);
 
                         // Clear text box and reset focus for next comment.
                         messageInput.value = '';
