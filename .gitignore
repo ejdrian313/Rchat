@@ -56,3 +56,4 @@ RchatMobile/chatR/.idea/libraries/Gradle__org_jetbrains_anko_anko_commons_0_10_7
 RchatMobile/chatR/.idea/libraries/Gradle__org_jetbrains_anko_anko_appcompat_v7_coroutines_0_10_7.xml
 RchatMobile/chatR/.idea/libraries/Gradle__org_jetbrains_anko_anko_0_10_7.xml
 RchatMobile/chatR/app/src/main/res/raw/cert.crt
+RchatMobile/chatR/app/google-services.json

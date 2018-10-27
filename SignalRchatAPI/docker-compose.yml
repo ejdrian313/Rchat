@@ -7,12 +7,21 @@ services:
       dockerfile: Dockerfile
     expose:
       - "5000"
- 
+      
+  fatfront:
+    build:
+      context: ./welcome_flask
+      dockerfile: Dockerfile
+    expose:
+      - "80"
+  
   proxy:
     build:
       context:  ./nginx
       dockerfile: Dockerfile
     ports:
       - "443:443"
+      - "80:80"
     links:
       - app
+      - fatfront

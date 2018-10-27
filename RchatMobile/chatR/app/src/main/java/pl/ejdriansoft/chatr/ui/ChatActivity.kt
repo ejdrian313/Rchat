@@ -25,17 +25,36 @@ class ChatActivity : AppCompatActivity(), HubConnectionListener, HubEventListene
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
-
-        info { Consts.token }
+        Firebase
         hubConnection = WebSocketHubConnectionP2("https://ejdriansoft.pl/chat", "Bearer ${Consts.token}")
 
         val messageList = ArrayList<String>()
         arrayAdapter = ArrayAdapter(this@ChatActivity,
                 R.layout.item_chat, messageList)
         lvMessages.adapter = arrayAdapter
-        getMessages(arrayAdapter)
 
+
+        getMessages(arrayAdapter)
+        setKeyAction()
+        startHubConnection()
+        subscribeHub()
+    }
+
+    private fun subscribeHub() {
+        hubConnection.subscribeToEvent("broadcastMessage", this)
+        hubConnection.subscribeToEvent("currentConnections") { message ->
+            runOnUiThread {
+                tvMain.text = "Current connections: ${message.arguments[0].asString}"
+            }
+        }
+    }
+
+    private fun setKeyAction() {
         bSend.setOnClickListener { _ ->
+            if (!hubConnection.isConnected) {
+                startHubConnection()
+                return@setOnClickListener
+            }
             val message = etMessageText.text.toString()
             etMessageText.setText("")
             try {
@@ -44,15 +63,18 @@ class ChatActivity : AppCompatActivity(), HubConnectionListener, HubEventListene
                 e.printStackTrace()
             }
         }
-        startHubConnection(hubConnection)
-
-        hubConnection.subscribeToEvent("broadcastMessage", this)
-        hubConnection.subscribeToEvent("currentConnections") { message ->
-            runOnUiThread {
-                tvMain.text = "Current connections: ${message.arguments[0].asString}"
-            }
-        }
     }
+
+    override fun onResume() {
+        super.onResume()
+        startHubConnection()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        hubConnection.disconnect()
+    }
+
 
     private fun getMessages(adapter: ArrayAdapter<String>) {
         val call = ChatRAPI(this).messages()
@@ -76,9 +98,9 @@ class ChatActivity : AppCompatActivity(), HubConnectionListener, HubEventListene
         }
     }
 
-    private fun startHubConnection(hub: HubConnection) {
+    private fun startHubConnection() {
         try {
-            hub.connect()
+            hubConnection.connect()
         } catch (e: Exception) {
             e.printStackTrace()
             tvMain.text = e.message
