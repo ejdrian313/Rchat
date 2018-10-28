@@ -9,13 +9,11 @@ namespace SignalRchat.Services.DAO.Models
 {
     public class Conversation
     {
+        [BsonId]
         public Guid Id { get; set; }
 
         public string Name { get; set; }
 
         public ICollection<String> UserId { get; set; }
-
-
-        public ICollection<Message> Messages { get; set; }
     }
 }

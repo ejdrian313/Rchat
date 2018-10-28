@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SignalRchat.Services.Helpers
+namespace SignalRchat.Helpers
 {
     public static class Seeder
     {
@@ -29,21 +29,13 @@ namespace SignalRchat.Services.Helpers
                     var conversations = databse.GetCollection<Conversation>("conversations");
                     var messages = databse.GetCollection<Message>("messages");
 
-                    if (!messages.Aggregate().Any())
-                        Messages().ForEach(m => messages.InsertOne(m));
-
                     if (!users.Aggregate().Any())
-                    {
                         Users().ForEach(user => users.InsertOne(user));
-                        var userList = users.Aggregate().ToList();
+                    
+                    var userList = users.Aggregate().ToList();
 
-
-                        if (!conversations.Aggregate().Any())
+                    if (!conversations.Aggregate().Any())
                             Conversations(userList[0].Id.ToString(), userList[1].Id.ToString()).ForEach(conversation => conversations.InsertOne(conversation));
-
-                      
-
-                    }
 
                 }
                 catch (Exception ex)
@@ -66,41 +58,7 @@ namespace SignalRchat.Services.Helpers
                    {
                         id1,
                         id2
-                   },
-                   Messages = new List<Message>
-                   {
-                       new Message
-                       {
-                           Id = Guid.NewGuid(),
-                           Body = "test message",
-                           Name = "filu34"
-                       },
-                       new Message
-                       {
-                           Id = Guid.NewGuid(),
-                           Body = "HUO HUO",
-                           Name = "ejdrian313"
-                       },
-                       new Message
-                       {
-                           Id = Guid.NewGuid(),
-                           Body = "test 3",
-                           Name = "ejdrian313"
-                       },
-                   }
-                }
-            };
-        }
-
-         private static List<Message> Messages()
-        {
-            return new List<Message>
-            {
-                new Message
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "filu34",
-                    Body = "test"
+                   } 
                 }
             };
         }

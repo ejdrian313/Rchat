@@ -20,6 +20,7 @@ namespace SignalRchat.Hubs
         }
 
         protected string UserName() => Context.User.FindFirstValue(TokenClaim.UserName) ?? "";
+        protected string UserId() => Context.User.FindFirstValue(TokenClaim.UserId) ?? "";
 
     }
 }

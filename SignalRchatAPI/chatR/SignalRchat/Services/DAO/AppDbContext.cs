@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using SignalRchat.Services.DAO.Models;
-using SignalRchat.Services.Helpers;
+using SignalRchat.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;

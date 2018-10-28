@@ -16,6 +16,7 @@ namespace SignalRchat.Services.DAO.Models
             CreationDate = DateTime.Now;
         }
 
+        [BsonId]
         public Guid Id { get; set; }
 
         public string Name { get; set; }

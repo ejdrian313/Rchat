@@ -8,44 +8,81 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using NLog;
+using SignalRchat.Helpers;
 using SignalRchat.Services;
 using SignalRchat.Services.Authentication;
 using SignalRchat.Services.DAO;
 using SignalRchat.Services.DAO.Models;
-using SignalRchat.Services.Helpers;
 
 namespace SignalRchat.Hubs {
 
     [Authorize]
-    public class ChatHub : BaseHub {
+    public class ChatHub : BaseHub 
+    {
         public ChatHub (IOptions<Settings> options, IMongoClient context) : base (options, context) 
         { 
         }
 
         public override Task OnConnectedAsync () 
         {
-            UserHandler.ConnectedIds.Add ($"{Context.ConnectionId} {UserName()}");
-
-            Clients.All.SendAsync ("currentConnections", UserHandler.ConnectedIds.Count ());
+            if (UserHandler.ConnectedIdHubAndIdUser.ContainsValue(UserId())) 
+            {
+                var connected = UserHandler.ConnectedIdHubAndIdUser.First(c => c.Value == UserId());
+                UserHandler.ConnectedIdHubAndIdUser.Remove(connected.Key);
+            } 
+            UserHandler.ConnectedIdHubAndIdUser.Add(Context.ConnectionId, UserId());
+            Clients.All.SendAsync ("currentConnections", UserHandler.ConnectedIdHubAndIdUser.Count ());
             return base.OnConnectedAsync ();
         }
 
         public override Task OnDisconnectedAsync (Exception exception) 
         {
-            UserHandler.ConnectedIds.Remove ($"{Context.ConnectionId} {UserName()}");
-            Clients.All.SendAsync ("currentConnections", UserHandler.ConnectedIds.Count ());
+            UserHandler.ConnectedIdHubAndIdUser.Remove(Context.ConnectionId);
+            Clients.All.SendAsync ("currentConnections", UserHandler.ConnectedIdHubAndIdUser.Count ());
             return base.OnDisconnectedAsync (exception);
         }
 
-        public void Send (string message) 
+        public void Send(string message, string conversationId) 
         {
-            _context.Messages.InsertOne (
-                new Message {
-                    Name = UserName (),
-                    Body = message
-                });
+            try 
+            {
+                var conversation = _context.Conversations.Aggregate().ToList().FirstOrDefault(c => c.Id.ToString().Equals(conversationId));
+                if (conversation == null) 
+                {
+                    _logger.Warn($"Conversation {conversationId} does not exist");
+                    return;
+                }
+                
+                _context.Messages.InsertOne (
+                    new Message {
+                        Name = UserName(),
+                        Body = message,
+                        ConversationId = conversationId
+                    }
+                );
+            
+                var userIds = conversation.UserId.ToList();
 
-            Clients.All.SendAsync ("broadcastMessage", UserName (), message);
+                UserHandler.ConnectedIdHubAndIdUser.ToList().ForEach(e => _logger.Info($"Key:{e.Key}  Value:{e.Value}"));
+
+                if (userIds.Any()) 
+                {
+                    userIds.ForEach( 
+                        userId => {
+                            _logger.Info(userId);
+                            var hubId = UserHandler.ConnectedIdHubAndIdUser.FirstOrDefault(c => c.Value.Equals(userId));
+                            _logger.Info($"hubId KEY: {hubId.Key}");
+                            if (hubId.Key != null) {
+                                Clients.Client(hubId.Key).SendAsync("broadcastMessage", UserName(), message, conversationId);
+                            }
+                        }
+                    );
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e);
+            }
         }
     }
 }

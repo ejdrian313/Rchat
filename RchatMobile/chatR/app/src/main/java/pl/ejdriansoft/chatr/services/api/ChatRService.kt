@@ -1,5 +1,6 @@
 package pl.ejdriansoft.chatr.services.api
 
+import pl.ejdriansoft.chatr.data.Conversations
 import pl.ejdriansoft.chatr.data.Message
 import pl.ejdriansoft.chatr.data.TokenVm
 import retrofit2.Call
@@ -10,7 +11,10 @@ import retrofit2.http.Query
 interface ChatRService {
 
     @GET("Dashboard/GetAllMessages")
-    fun allMessages() : Call<List<Message>>
+    fun allMessages(@Query("conversationId") conversationId: String) : Call<List<Message>>
+
+    @GET("Dashboard/Conversations")
+    fun conversations() : Call<List<Conversations>>
 
     @GET("Authentication/Login")
     @Headers("No-Authentication: true")

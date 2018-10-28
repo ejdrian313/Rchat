@@ -52,11 +52,15 @@ class ChatRAPI(context: Context) {
         api = retrofit.create(ChatRService::class.java)
     }
 
-    fun messages(): Call<List<Message>> {
-        return api.allMessages()
+    fun messages(@Query("conversationId") conversationId: String): Call<List<Message>> {
+        return api.allMessages(conversationId)
     }
 
     fun login(@Query("email") login: String, @Query("password") pass: String) : Call<TokenVm> {
         return api.login(login, pass)
+    }
+
+    fun conversations() : Call<List<Conversations>> {
+        return api.conversations()
     }
 }

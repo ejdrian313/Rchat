@@ -15,13 +15,16 @@ using MongoDB.Driver;
 using SignalRchat.Hubs;
 using SignalRchat.Services;
 using SignalRchat.Services.Authentication;
-using SignalRchat.Services.Helpers;
+using SignalRchat.Helpers;
 using Swashbuckle.AspNetCore.Swagger;
 
-namespace SignalRchat {
-    public class Startup {
+namespace SignalRchat 
+{
+    public class Startup 
+    {
         private readonly IHostingEnvironment _env;
-        public Startup (IConfiguration configuration, IHostingEnvironment environment) {
+        public Startup (IConfiguration configuration, IHostingEnvironment environment) 
+        {
             _env = environment;
 
             Configuration = configuration;
@@ -130,20 +133,21 @@ namespace SignalRchat {
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure (IApplicationBuilder app, IHostingEnvironment env, ICipherService cipherService, ILogger<Startup> logger) {
+        public void Configure (IApplicationBuilder app, IHostingEnvironment env, ICipherService cipherService, ILogger<Startup> logger) 
+        {
             app.SeedDatabase (cipherService);
 
             app.UseAuthentication ();
-            if (env.IsDevelopment ()) {
+            if (env.IsDevelopment ()) 
+            {
                 app.UseDeveloperExceptionPage ();
             }
             app.UseHttpsRedirection ();
             app.UseHsts ();
             app.UseCors ("CorsPolicy");
 
-            app.UseFileServer ();
-
-            app.UseSignalR (routes => {
+            app.UseSignalR (routes => 
+            {
                 routes.MapHub<ChatHub> ("/chat");
             });
 
@@ -157,7 +161,8 @@ namespace SignalRchat {
         }
     }
 
-    public class Settings {
+    public class Settings 
+    {
         public string ConnectionString { get; set; }
         public string Database { get; set; }
     }

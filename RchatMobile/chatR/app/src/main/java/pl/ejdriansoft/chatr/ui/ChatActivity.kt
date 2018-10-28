@@ -1,6 +1,7 @@
 package pl.ejdriansoft.chatr.ui
 
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
@@ -20,26 +21,34 @@ import java.util.ArrayList
 class ChatActivity : AppCompatActivity(), HubConnectionListener, HubEventListener, AnkoLogger {
 
     lateinit var arrayAdapter: ArrayAdapter<String>
-    private lateinit var hubConnection: WebSocketHubConnectionP2
+    lateinit var hubConnection: WebSocketHubConnectionP2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
-        Firebase
+
         hubConnection = WebSocketHubConnectionP2("https://ejdriansoft.pl/chat", "Bearer ${Consts.token}")
 
         val messageList = ArrayList<String>()
         arrayAdapter = ArrayAdapter(this@ChatActivity,
                 R.layout.item_chat, messageList)
-        lvMessages.adapter = arrayAdapter
+        supportFragmentManager.beginTransaction()
+                .replace(R.id.viewConversation, ConversationsFragment())
+                .commit()
 
-
-        getMessages(arrayAdapter)
-        setKeyAction()
         startHubConnection()
         subscribeHub()
     }
 
+    override fun onBackPressed() {
+        if (supportFragmentManager.backStackEntryCount > 1) {
+            supportFragmentManager.popBackStack()
+        } else {
+            super.onBackPressed()
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
     private fun subscribeHub() {
         hubConnection.subscribeToEvent("broadcastMessage", this)
         hubConnection.subscribeToEvent("currentConnections") { message ->
@@ -49,53 +58,9 @@ class ChatActivity : AppCompatActivity(), HubConnectionListener, HubEventListene
         }
     }
 
-    private fun setKeyAction() {
-        bSend.setOnClickListener { _ ->
-            if (!hubConnection.isConnected) {
-                startHubConnection()
-                return@setOnClickListener
-            }
-            val message = etMessageText.text.toString()
-            etMessageText.setText("")
-            try {
-                hubConnection.invoke("Send", message)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-    }
-
     override fun onResume() {
         super.onResume()
         startHubConnection()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        hubConnection.disconnect()
-    }
-
-
-    private fun getMessages(adapter: ArrayAdapter<String>) {
-        val call = ChatRAPI(this).messages()
-        doAsync {
-            val response = call.execute()
-            if (response.isSuccessful) {
-                runOnUiThread {
-                    response.body()?.forEach {
-                        adapter.add("${it.name}: ${it.body}")
-                    }
-                    adapter.notifyDataSetChanged()
-                    progress.visibility = View.GONE
-                }
-            } else {
-                runOnUiThread {
-                    progress.visibility = View.GONE
-                    tvMain.text = getString(R.string.error_load_messages)
-                    toast(getString(R.string.error_load_messages)).show()
-                }
-            }
-        }
     }
 
     private fun startHubConnection() {
@@ -103,13 +68,15 @@ class ChatActivity : AppCompatActivity(), HubConnectionListener, HubEventListene
             hubConnection.connect()
         } catch (e: Exception) {
             e.printStackTrace()
-            tvMain.text = e.message
         }
     }
 
     override fun onEventMessage(message: HubMessage) {
+        val name = message.arguments[0].asString
+        val body = message.arguments[1].asString
+        val conversationId = message.arguments[2].asString
         runOnUiThread {
-            arrayAdapter.add("${message.arguments[0].asString}: ${message.arguments[1].asString}")
+            arrayAdapter.add("$name: $body")
             arrayAdapter.notifyDataSetChanged()
         }
     }

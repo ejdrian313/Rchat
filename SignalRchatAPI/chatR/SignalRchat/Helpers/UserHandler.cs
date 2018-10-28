@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SignalRchat.Services.Helpers
+namespace SignalRchat.Helpers
 {
     public static class UserHandler
     {
-        public static HashSet<string> ConnectedIds = new HashSet<string>();
+        public static Dictionary<string, string> ConnectedIdHubAndIdUser = new Dictionary<string, string>();
     }
 }

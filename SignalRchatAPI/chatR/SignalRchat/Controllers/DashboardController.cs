@@ -17,13 +17,14 @@ namespace SignalRchat.Controllers
         {
         }
 
+
         [HttpGet]
-        public IActionResult GetAllMessages()
+        public IActionResult GetAllMessages(string conversationId)
         {
             try
             {
-                var m = _context.Messages.Aggregate().ToList();
-                return Ok(m);
+                var messages = _context.Messages.Find(m => m.ConversationId == conversationId).ToList();
+                return Ok(messages);
             }
             catch (Exception e)
             {
@@ -37,12 +38,11 @@ namespace SignalRchat.Controllers
         {
             try
             {
-                var uid = UserId();
                 var all = _context.Conversations.Aggregate().ToList();
                 var userConversations = new List<Conversation>();
                 foreach (var conversation in all)
                 {
-                    if (conversation.UserId.Contains(uid))
+                    if (conversation.UserId.Contains(UserId()))
                     {
                         userConversations.Add(conversation);
                     }
