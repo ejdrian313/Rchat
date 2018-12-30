@@ -19,13 +19,14 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Fabric.with(this, Crashlytics())
-        setContentView(R.layout.activity_login)
         val prefs = Prefs(this)
         if (prefs.token?.isNotEmpty()!!) {
             Consts.token = prefs.token
             startActivity(intentFor<ChatActivity>().singleTop())
             finish()
         }
+
+        setContentView(R.layout.activity_login)
 
         val api = ChatRAPI(this)
         btnLogin.setOnClickListener {
@@ -43,6 +44,8 @@ class LoginActivity : AppCompatActivity() {
             }
 
             etNickname.error = null
+
+           // val firebaseKey = FirebaseInstanceId.getInstance().token
 
             val call = api.login(etNickname.text.toString(), etPassword.text.toString())
 

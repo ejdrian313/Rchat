@@ -19,6 +19,7 @@ import javax.net.ssl.TrustManagerFactory
 import android.R.raw
 import android.content.Context
 import pl.ejdriansoft.chatr.R
+import pl.ejdriansoft.chatr.data.CreateConversation
 import java.security.KeyStore
 import java.security.cert.Certificate
 import java.security.cert.CertificateFactory
@@ -62,5 +63,9 @@ class ChatRAPI(context: Context) {
 
     fun conversations() : Call<List<Conversations>> {
         return api.conversations()
+    }
+
+    fun createConversation(createVm: CreateConversation) : Call<Void> {
+        return  api.createConversation(createVm)
     }
 }

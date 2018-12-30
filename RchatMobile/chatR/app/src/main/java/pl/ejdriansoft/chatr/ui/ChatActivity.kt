@@ -3,25 +3,30 @@ package pl.ejdriansoft.chatr.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
 import com.smartarmenia.dotnetcoresignalrclientjava.*
+import com.squareup.moshi.Moshi
 import kotlinx.android.synthetic.main.activity_chat.*
 import org.jetbrains.anko.*
 import pl.ejdriansoft.chatr.R
-import pl.ejdriansoft.chatr.services.ChatRAPI
+import pl.ejdriansoft.chatr.data.Conversations
+import pl.ejdriansoft.chatr.data.Message
 import pl.ejdriansoft.chatr.services.Consts
-import pl.ejdriansoft.chatr.services.Prefs
 import java.util.ArrayList
 
 
 class ChatActivity : AppCompatActivity(), HubConnectionListener, HubEventListener, AnkoLogger {
 
-    lateinit var arrayAdapter: ArrayAdapter<String>
+    val conversationsHashMap = LinkedHashMap<Conversations, List<Message>?>()
+    lateinit var messageAdapter: ArrayAdapter<String>
     lateinit var hubConnection: WebSocketHubConnectionP2
+    val moshi = Moshi.Builder().build()
+    var messageJson = moshi.adapter(Message::class.java)
+
+    val conversations = ArrayList<Conversations>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,9 +34,11 @@ class ChatActivity : AppCompatActivity(), HubConnectionListener, HubEventListene
 
         hubConnection = WebSocketHubConnectionP2("https://ejdriansoft.pl/chat", "Bearer ${Consts.token}")
 
-        val messageList = ArrayList<String>()
-        arrayAdapter = ArrayAdapter(this@ChatActivity,
-                R.layout.item_chat, messageList)
+        val conversations = ArrayList<String>()
+
+        messageAdapter = ArrayAdapter(this@ChatActivity,
+                R.layout.item_chat, conversations)
+
         supportFragmentManager.beginTransaction()
                 .replace(R.id.viewConversation, ConversationsFragment())
                 .commit()
@@ -71,13 +78,11 @@ class ChatActivity : AppCompatActivity(), HubConnectionListener, HubEventListene
         }
     }
 
-    override fun onEventMessage(message: HubMessage) {
-        val name = message.arguments[0].asString
-        val body = message.arguments[1].asString
-        val conversationId = message.arguments[2].asString
+    override fun onEventMessage(hubMessage: HubMessage) {
+        val message = messageJson.fromJson(hubMessage.arguments[0].toString())
         runOnUiThread {
-            arrayAdapter.add("$name: $body")
-            arrayAdapter.notifyDataSetChanged()
+            messageAdapter.add("${message.name}: ${message.body}")
+            messageAdapter.notifyDataSetChanged()
         }
     }
 

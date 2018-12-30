@@ -17,6 +17,8 @@ namespace SignalRchat.Services
         public static string AudienceName => Configuration["AppSettings:Authentication:AudienceName"];
         public static string ExpiryInMinutes => Configuration["AppSettings:Authentication:ExpiryInMinutes"];
 
+        public static string FirebaseKey => Configuration["AppSettings:FirebaseKey"];
+
         public static string CipherKey => Configuration["AppSettings:CipherKey"];
 
     }

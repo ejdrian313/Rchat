@@ -52,14 +52,14 @@ namespace SignalRchat.Hubs {
                     _logger.Warn($"Conversation {conversationId} does not exist");
                     return;
                 }
-                
-                _context.Messages.InsertOne (
-                    new Message {
+
+                var messageVm = new Message {
                         Name = UserName(),
                         Body = message,
                         ConversationId = conversationId
-                    }
-                );
+                    };
+                
+                _context.Messages.InsertOneAsync(messageVm);
             
                 var userIds = conversation.UserId.ToList();
 
@@ -69,11 +69,9 @@ namespace SignalRchat.Hubs {
                 {
                     userIds.ForEach( 
                         userId => {
-                            _logger.Info(userId);
                             var hubId = UserHandler.ConnectedIdHubAndIdUser.FirstOrDefault(c => c.Value.Equals(userId));
-                            _logger.Info($"hubId KEY: {hubId.Key}");
-                            if (hubId.Key != null) {
-                                Clients.Client(hubId.Key).SendAsync("broadcastMessage", UserName(), message, conversationId);
+                            if (hubId.Key != null) { //send if connection exists
+                                Clients.Client(hubId.Key).SendAsync("broadcastMessage", messageVm);
                             }
                         }
                     );

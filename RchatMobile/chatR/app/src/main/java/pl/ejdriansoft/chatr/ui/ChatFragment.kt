@@ -27,8 +27,8 @@ class ChatFragment : Fragment() {
 
         conversationId = arguments?.getString("id")!!
 
-        getMessages(actChat.arrayAdapter, conversationId)
-        lvMessages.adapter = actChat.arrayAdapter
+        getMessages(actChat.messageAdapter, conversationId)
+        lvMessages.adapter = actChat.messageAdapter
 
         bSend.setOnClickListener { _ ->
             val message = etMessageText.text.toString()
@@ -50,6 +50,7 @@ class ChatFragment : Fragment() {
                     adapter.clear()
                     response.body()?.forEach { message ->
                         adapter.add("${message.name}: ${message.body}")
+
                     }
                     adapter.notifyDataSetChanged()
                     progress?.visibility = View.GONE

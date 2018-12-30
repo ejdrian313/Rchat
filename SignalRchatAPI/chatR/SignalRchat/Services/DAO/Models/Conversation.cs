@@ -12,8 +12,6 @@ namespace SignalRchat.Services.DAO.Models
         [BsonId]
         public Guid Id { get; set; }
 
-        public string Name { get; set; }
-
         public ICollection<String> UserId { get; set; }
     }
 }

@@ -17,6 +17,7 @@ using SignalRchat.Services;
 using SignalRchat.Services.Authentication;
 using SignalRchat.Helpers;
 using Swashbuckle.AspNetCore.Swagger;
+using NLog.Web;
 
 namespace SignalRchat 
 {
@@ -25,6 +26,7 @@ namespace SignalRchat
         private readonly IHostingEnvironment _env;
         public Startup (IConfiguration configuration, IHostingEnvironment environment) 
         {
+
             _env = environment;
 
             Configuration = configuration;
@@ -41,6 +43,8 @@ namespace SignalRchat
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices (IServiceCollection services) {
+            var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
+
             services.Configure<Settings> (options => {
                 options.ConnectionString = Configuration.GetSection ("MongoConnection:ConnectionString").Value;
                 options.Database = Configuration.GetSection ("MongoConnection:Database").Value;
@@ -64,12 +68,12 @@ namespace SignalRchat
                     };
 
                     options.Events = new JwtBearerEvents {
-                        OnAuthenticationFailed = context => {
-                                Console.WriteLine ("OnAuthenticationFailed: " + context.Exception.Message);
+                            OnAuthenticationFailed = context => {
+                                logger.Error ("OnAuthenticationFailed: " + context.Exception.Message);
                                 return Task.CompletedTask;
                             },
                             OnTokenValidated = context => {
-                                Console.WriteLine ("OnTokenValidated: " + context.SecurityToken);
+                                logger.Info ("OnTokenValidated: " + context.SecurityToken);
                                 return Task.CompletedTask;
                             },
                             // We have to hook the OnMessageReceived event in order to
